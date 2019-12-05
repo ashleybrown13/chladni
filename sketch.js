@@ -9,10 +9,10 @@ function preload(){
 }
 
 function setup(){
-  let cnv = createCanvas(600, 600);
+  let cnv = createCanvas(1200, 1200);
   background(255);
   cnv.mouseClicked(togglePlay);
-  fft = new p5.FFT(.8, 128);
+  fft = new p5.FFT(0, 128);
   sound.amp(0.2);
   strokeWeight(1)
   frameRate(1)
@@ -32,27 +32,42 @@ function draw(){
 
 	radius_min += 3
 	radius_max += 3
+	let radius
+	let degree
+	let x
+	let y
+	let min_spectrum = 30
+	let max_spectrum = 70
 
 	beginShape()
-	for (let i=0; i<spectrum.length; i++) {
+	radius = map(spectrum[max_spectrum], 0, 500, radius_min, radius_max)
+	degree = map(max_spectrum, min_spectrum, max_spectrum + 1, 0, 360)
+	x = radius * cos(radians(degree)) + center_x
+	y = radius * sin(radians(degree)) + center_y
+	curveVertex(x, y)
 
-		let radius = map(spectrum[i], 0, 500, radius_min, radius_max)
-		let degree = map(i, 0, spectrum.length, 0, 360)
+	for (let i=min_spectrum; i<=max_spectrum; i++) {
 
-		x = radius * cos(radians(degree));
-		y = radius * sin(radians(degree));
-		curveVertex(x + center_x, y + center_y)
-		if (i==0) {
-			curveVertex(x + center_x, y + center_y)
-		}
+		radius = map(spectrum[i], 0, 500, radius_min, radius_max)
+		degree = map(i, min_spectrum, max_spectrum + 1 , 0, 360)
+
+		x = radius * cos(radians(degree)) + center_x
+		y = radius * sin(radians(degree)) + center_y
+		curveVertex(x, y)
+		
 	}
 
-	let radius = map(spectrum[0], 0, 100, radius_min, radius_max)
-	let degree = map(0, 0, spectrum.length, 0, 360)
-	x = radius * cos(radians(degree));
-	y = radius * sin(radians(degree));	
-	curveVertex(x + center_x, y + center_y)
-	curveVertex(x + center_x, y + center_y)
+	radius = map(spectrum[min_spectrum], 0, 500, radius_min, radius_max)
+	degree = map(min_spectrum, min_spectrum, max_spectrum + 1, 0, 360)
+	x = radius * cos(radians(degree)) + center_x
+	y = radius * sin(radians(degree)) + center_y
+	curveVertex(x, y)
+
+	radius = map(spectrum[min_spectrum + 1], 0, 500, radius_min, radius_max)
+	degree = map(min_spectrum + 1, min_spectrum, max_spectrum + 1, 0, 360)
+	x = radius * cos(radians(degree)) + center_x
+	y = radius * sin(radians(degree)) + center_y
+	curveVertex(x, y)
 
 	endShape()
 	
